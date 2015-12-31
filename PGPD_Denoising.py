@@ -47,12 +47,13 @@ def PGPD_Denoising(par, model):
 	        dif = numpy.mean(numpy.mean( numpy.square(par['nim']-im_out) )) 
 	        par['nSig'] = numpy.sqrt( abs(par['nSig0']*par['nSig0']-dif) )*par['eta']
 
-	    # CHECKPOINT
+
 
 	    # search non-local patch groups
-	    [nDCnlX,blk_arr,DC,par] = CalNonLocal( im_out, par)
+	    [nDCnlX,blk_arr,DC,par] = CalNonLocal(im_out, par)
 	    # Gaussian dictionary selection by MAP
-	    if mod(ite-1,2) == 0
+	    if (ite - 1)%2 == 0:
+	    # CHECKPOINT
 	        PYZ = zeros(model.nmodels,size(DC,2))
 	        sigma2I = par['nSig']^2*eye(par['ps2'])
 	        for i = 1:model.nmodels

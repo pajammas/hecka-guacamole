@@ -47,3 +47,4 @@ print('The initial value of PSNR = '+str(PSNR_init)+', SSIM = '+str(SSIM_init))
 PSNR_final = csnr(im_out*255, I*255, 0, 0)
 SSIM_final = cal_ssim(im_out*255, I*255, 0, 0)
 print('Cameraman Results: PSNR = '+str(PSNR_final)+', SSIM = '+str(SSIM_final))
+
