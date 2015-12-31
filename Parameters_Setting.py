@@ -92,4 +92,5 @@ def Parameters_Setting(nSig):
 print Parameters_Setting(15)[0]
 
 
+
 # load_dict = sio.loadmat('./model/PG_GMM_8x8_win15_nlsp10_delta0.002_cls33.mat', squeeze_me=True)
