@@ -1,6 +1,6 @@
 # Translated to Python by Duncan Sommer
 
-
+from numpy import *
 
 def csnr(A,B,row,col):
    
@@ -14,22 +14,17 @@ def csnr(A,B,row,col):
    #B=double(B)
    
    e = A-B
+   e = e[row+1 : n-row][col+1 : m-col]
 
    if ch == 1:
-      e = e(row+1:n-row, col+1:m-col)
-
-      me = mean(mean(e.^2))
-      
-      s = 10*log10(255^2/me)
+      me = mean(mean(square(e)))      
    
-   else
-      e = e(row+1:n-row,col+1:m-col,:)
-      e1 = e(:,:,1)e2 = e(:,:,2)e3 = e(:,:,3)
-      me1 = mean(mean(e1.^2))
-      me2 = mean(mean(e2.^2))
-      me3 = mean(mean(e3.^2))
-      mse = (me1+me2+me3)/3
-      s   =  10*log10(255^2/mse)
+   else:
+      me1 = mean(mean(square(e[:,:,0])))
+      me2 = mean(mean(square(e[:,:,1])))
+      me3 = mean(mean(square(e[:,:,2])))
+      me = mean(me1, me2, me3)      
    
+   s = 10*log10(255*255/mse)
 
    return s
