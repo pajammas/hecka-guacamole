@@ -6,7 +6,7 @@
 #              The Hong Kong Polytechnic University
 #------------------------------------------------------------------------------------------------
 
-# Translated to Python by Duncan Sommer
+# Translated to Python by Duncan Sommer and Kaisar Kushibar
 
 import numpy
 
@@ -58,14 +58,14 @@ def PGPD_Denoising(par, model):
 	        for i = 1:model.nmodels
 	            sigma = model.covs(:,:,i) + sigma2I
 	            [R,~] = chol(sigma)
-	            Q = R'\nDCnlX                  '
+	            Q = numpy.linalg.lstsq(numpy.transpose(R),nDCnlX)
 	            TempPYZ = - sum(log(diag(R))) - dot(Q,Q,1)/2
 	            TempPYZ = reshape(TempPYZ,[par['nlsp'] size(DC,2)])
 	            PYZ(i,:) = sum(TempPYZ)
 	        end
 	        # find the most likely component for each patch group
 	        [~,dicidx] = max(PYZ)
-	        dicidx = dicidx'                     '
+	        dicidx = numpy.transpose(dicidx)
 	        [idx,  s_idx] = sort(dicidx)
 	        idx2 = idx(1:end-1) - idx(2:end)
 	        seq = find(idx2)
@@ -82,7 +82,7 @@ def PGPD_Denoising(par, model):
 	        lambdaM = repmat(par['c1']*par['nSig']^2./ (sqrt(S)+eps ),[1 par['nlsp']])
 	        for i = 1:size(idx,1)
 	            Y = nDCnlX(:,(idx(i)-1)*par['nlsp']+1:idx(i)*par['nlsp'])
-	            b = D'*Y                           '
+	            b = numpy.transpose(D)*Y
 	            # soft threshold
 	            alpha = sign(b).*max(abs(b)-lambdaM/2,0)
 	            # add DC components and aggregation
@@ -99,8 +99,8 @@ def PGPD_Denoising(par, model):
 	    for i = 1:par['ps']
 	        for j = 1:par['ps']
 	            k = k+1
-	            im_out(r-1+i,c-1+j)  =  im_out(r-1+i,c-1+j) + reshape( X_hat(k,:)', [par['maxr'] par['maxc']])               '
-	            im_wei(r-1+i,c-1+j)  =  im_wei(r-1+i,c-1+j) + reshape( W(k,:)', [par['maxr'] par['maxc']])               '               '
+	            im_out(r-1+i,c-1+j)  =  im_out(r-1+i,c-1+j) + reshape( numpy.transpose(X_hat(k,:)), [par['maxr'] par['maxc']])
+	            im_wei(r-1+i,c-1+j)  =  im_wei(r-1+i,c-1+j) + reshape( numpy.transpose(W(k,:)), [par['maxr'] par['maxc']])
 	        end
 	    end
 	    im_out  =  im_out./im_wei
@@ -122,7 +122,7 @@ def PGPD_Denoising(par, model):
 	    for j = 1:par['ps']
 	        k = k+1
 	        blk = im(i:end-par['ps']+i,j:end-par['ps']+j)
-	        X(k,:) = blk(:)'               '
+	        X(k,:) = numpy.transpose(blk(:))
 	    end
 	end
 	# index of each patch in image
