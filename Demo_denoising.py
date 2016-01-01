@@ -15,11 +15,12 @@ import random
 import scipy.misc
 import numpy
 
-
+# Dummy function just to try running this
 def Parameters_Setting(nSig):
 	par = {'nSig':nSig/255}
 	model = []
 	return (par, model)
+
 
 # set parameters
 nSig = 50
