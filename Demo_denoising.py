@@ -11,13 +11,12 @@
 
 # Translated to Python by Duncan Sommer
 
-import random
 import scipy.misc
 import skimage
 import skimage.io
-#import csnr
 import cal_ssim
-#import PGPD_Denoising
+import csnr
+import PGPD_Denoising
 import numpy
 
 # Dummy function just to try running this
@@ -41,16 +40,15 @@ par['I'] = I
 nim = I + par['nSig']*numpy.random.randn(I.shape[0], I.shape[1])
 par['nim'] = nim
 
-#PSNR_init = csnr(nim*255, I*255, 0, 0)
-SSIM_init = cal_ssim.cal_ssim(nim*255., I*255., 0, 0)
-print(str(SSIM_init))
-#print('The initial value of PSNR = '+str(PSNR_init)+', SSIM = '+str(SSIM_init))
+PSNR_init = csnr.csnr(nim*255., I*255., 0., 0.)
+SSIM_init = cal_ssim.cal_ssim(nim*255., I*255., 0., 0.)
+print('The initial value of PSNR = '+str(PSNR_init)+', SSIM = '+str(SSIM_init))
 
 # PGPD denoising
-#[im_out, par] = PGPD_Denoising(par, model)
+[im_out, par] = PGPD_Denoising(par, model)
 # [im_out,par]  =  PGPD_Denoising_faster(par,model) # faster speed
 
 # calculate the PSNR and SSIM
-#PSNR_final = csnr(im_out*255, I*255, 0, 0)
-#SSIM_final = cal_ssim(im_out*255, I*255, 0, 0)
-#print('Cameraman Results: PSNR = '+str(PSNR_final)+', SSIM = '+str(SSIM_final))
+PSNR_final = csnr(im_out*255., I*255., 0., 0.)
+SSIM_final = cal_ssim(im_out*255., I*255., 0., 0.)
+print('Cameraman Results: PSNR = '+str(PSNR_final)+', SSIM = '+str(SSIM_final))
