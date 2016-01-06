@@ -13,6 +13,8 @@
 
 import random
 import scipy.misc
+import skimage
+import skimage.io
 #import csnr
 import cal_ssim
 #import PGPD_Denoising
@@ -20,27 +22,27 @@ import numpy
 
 # Dummy function just to try running this
 def Parameters_Setting(nSig):
-	par = {'nSig':nSig/255}
+	par = {'nSig':nSig/255.}
 	model = []
 	return (par, model)
 
 
 # set parameters
-nSig = 50
+nSig = 50.
 [par, model]  =  Parameters_Setting( nSig )
 
 # read clean image
-I = scipy.misc.imread('cameraman.png')/255
+I = skimage.io.imread('cameraman.png')/255.
 par['I'] = I
-
 # generate noisy image
-random.seed()
+#random.seed()
 # I doubt that this translates well to python
-nim = I + par['nSig']*random.randrange(len(I))
+#par.nim =   par.I + par.nSig*randn(size(par.I));
+nim = I + par['nSig']*numpy.random.randn(I.shape[0], I.shape[1])
 par['nim'] = nim
 
 #PSNR_init = csnr(nim*255, I*255, 0, 0)
-SSIM_init = cal_ssim.cal_ssim(nim*255, I*255, 0, 0)
+SSIM_init = cal_ssim.cal_ssim(nim*255., I*255., 0, 0)
 print(str(SSIM_init))
 #print('The initial value of PSNR = '+str(PSNR_init)+', SSIM = '+str(SSIM_init))
 
