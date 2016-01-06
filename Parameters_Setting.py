@@ -60,6 +60,9 @@ def Parameters_Setting(nSig):
 
     # Extract the model itself (BIG)
     model = load_dict['model']
+    # Some variables didn't get loaded properly
+    model['n_models'] = load_dict['cls_num']
+
 
 
 	# Extract necessary parameter data

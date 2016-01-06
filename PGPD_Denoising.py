@@ -26,7 +26,7 @@ def PGPD_Denoising(par, model):
 	r = range(0, par['maxr'], par['step'])
 	par['r'] = r + range(r[-1]+1, par['maxr'])
 	# Unsure if I translated this line correctly
-	#par['r'] = [r r(end)+1:par['maxr']]
+	#par['r'] = [r r()+1:par['maxr']]
 	c = range(0, par['maxc'], par['step'])
 	par['c'] = c + range(c[-1]+1, par['maxc'])
 
@@ -52,6 +52,7 @@ def PGPD_Denoising(par, model):
 	    [nDCnlX,blk_arr,DC,par] = CalNonLocal(im_out, par)
 	    # Gaussian dictionary selection by MAP
 	    if (ite - 1)%2 == 0:
+
 	    # CHECKPOINT
 	        PYZ = zeros(model.nmodels,size(DC,2))
 	        sigma2I = par['nSig']^2*eye(par['ps2'])
@@ -62,15 +63,15 @@ def PGPD_Denoising(par, model):
 	            TempPYZ = - sum(log(diag(R))) - dot(Q,Q,1)/2
 	            TempPYZ = reshape(TempPYZ,[par['nlsp'] size(DC,2)])
 	            PYZ(i,:) = sum(TempPYZ)
-	        end
+	        
 	        # find the most likely component for each patch group
 	        [~,dicidx] = max(PYZ)
 	        dicidx = numpy.transpose(dicidx)
 	        [idx,  s_idx] = sort(dicidx)
-	        idx2 = idx(1:end-1) - idx(2:end)
+	        idx2 = idx(1:-1) - idx(2:)
 	        seq = find(idx2)
 	        seg = [0 seq length(dicidx)]
-	    end
+	    
 	    # Weighted Sparse Coding
 	    X_hat = zeros(par['ps2'],par['maxrc'],'single')
 	    W = zeros(par['ps2'],par['maxrc'],'single')
@@ -88,8 +89,8 @@ def PGPD_Denoising(par, model):
 	            # add DC components and aggregation
 	            X_hat(:,blk_arr(:,idx(i))) = X_hat(:,blk_arr(:,idx(i)))+bsxfun(@plus,D*alpha, DC(:,idx(i)))
 	            W(:,blk_arr(:,idx(i))) = W(:,blk_arr(:,idx(i)))+ones(par['ps2'],par['nlsp'])
-	        end
-	    end
+	        
+	    
 	    # Reconstruction
 	    im_out = zeros(h,w,'single')
 	    im_wei = zeros(h,w,'single')
@@ -101,14 +102,14 @@ def PGPD_Denoising(par, model):
 	            k = k+1
 	            im_out(r-1+i,c-1+j)  =  im_out(r-1+i,c-1+j) + reshape( numpy.transpose(X_hat(k,:)), [par['maxr'] par['maxc']])
 	            im_wei(r-1+i,c-1+j)  =  im_wei(r-1+i,c-1+j) + reshape( numpy.transpose(W(k,:)), [par['maxr'] par['maxc']])
-	        end
-	    end
+	        
+	    
 	    im_out  =  im_out./im_wei
 	    # calculate the PSNR and SSIM
 	    PSNR =   csnr( im_out*255, par['I']*255, 0, 0 )
 	    SSIM      =  cal_ssim( im_out*255, par['I']*255, 0, 0 )
 	    fprintf('Iter #d : PSNR = #2.4f, SSIM = #2.4f\n',ite, PSNR,SSIM)
-	end
+	
 	im_out(im_out > 1) = 1
 	im_out(im_out < 0) = 0
 	return
@@ -121,10 +122,10 @@ def PGPD_Denoising(par, model):
 	for i = 1:par['ps']
 	    for j = 1:par['ps']
 	        k = k+1
-	        blk = im(i:end-par['ps']+i,j:end-par['ps']+j)
+	        blk = im(i:-par['ps']+i,j:-par['ps']+j)
 	        X(k,:) = numpy.transpose(blk(:))
-	    end
-	end
+	    
+	
 	# index of each patch in image
 	Index    =   (1:par['maxrc'])
 	Index    =   reshape(Index,par['maxr'],par['maxc'])
@@ -156,8 +157,8 @@ def PGPD_Denoising(par, model):
 	        temp = X( : , indc )
 	        DC(:,off1) = mean(temp,2)
 	        nDCnlX(:,(off1-1)*par['nlsp']+1:off1*par['nlsp']) = bsxfun(@minus,temp,DC(:,off1))
-	    end
-	end
+	    
+	
 
 
 	return (im_out, par)
