@@ -18,17 +18,11 @@ import cal_ssim
 import csnr
 import PGPD_Denoising
 import numpy
-
-# Dummy function just to try running this
-def Parameters_Setting(nSig):
-	par = {'nSig':nSig/255.}
-	model = []
-	return (par, model)
-
+import Parameters_Setting
 
 # set parameters
 nSig = 50.
-[par, model]  =  Parameters_Setting( nSig )
+[par, model]  =  Parameters_Setting.Parameters_Setting( nSig )
 
 # read clean image
 I = skimage.io.imread('cameraman.png')/255.
@@ -45,10 +39,10 @@ SSIM_init = cal_ssim.cal_ssim(nim*255., I*255., 0., 0.)
 print('The initial value of PSNR = '+str(PSNR_init)+', SSIM = '+str(SSIM_init))
 
 # PGPD denoising
-[im_out, par] = PGPD_Denoising(par, model)
+[im_out, par] = PGPD_Denoising.PGPD_Denoising(par, model)
 # [im_out,par]  =  PGPD_Denoising_faster(par,model) # faster speed
 
 # calculate the PSNR and SSIM
-PSNR_final = csnr(im_out*255., I*255., 0., 0.)
-SSIM_final = cal_ssim(im_out*255., I*255., 0., 0.)
+PSNR_final = csnr.csnr(im_out*255., I*255., 0., 0.)
+SSIM_final = cal_ssim.cal_ssim(im_out*255., I*255., 0., 0.)
 print('Cameraman Results: PSNR = '+str(PSNR_final)+', SSIM = '+str(SSIM_final))

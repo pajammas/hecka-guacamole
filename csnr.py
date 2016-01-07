@@ -25,6 +25,6 @@ def csnr(A,B,row,col):
       me3 = mean(mean(square(e[:,:,2])))
       me = mean(me1, me2, me3)      
    
-   s = 10*log10(255*255/mse)
+   s = 10*log10(255*255/me)
 
    return s

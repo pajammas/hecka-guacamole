@@ -105,6 +105,7 @@ for i = 1:par.ps
     for j = 1:par.ps
         k = k+1;
         blk = im(i:end-par.ps+i,j:end-par.ps+j);
+        disp(size(blk));
         X(k,:) = blk(:)';
     end
 end
@@ -129,15 +130,16 @@ for  i  =  1 :par.lenr
         cmin = max( col - par.Win, 1 );
         cmax = min( col + par.Win, par.maxc );
         idx     =   Index(rmin:rmax, cmin:cmax);
-        idx     =   idx(:);
+        %idx     =   idx(:);
         neighbor = X(:,idx); % the patches around the seed in X
         seed  = X(:,off);
         dis = sum(bsxfun(@minus,neighbor, seed).^2,1);
-        [~,ind] = sort(dis);
+        [tmpppp,ind] = sort(dis);
         indc = idx( ind( 1:par.nlsp ) );
         blk_arr(:,off1) = indc;
         temp = X( : , indc );
         DC(:,off1) = mean(temp,2);
+        disp(size((off1-1)*par.nlsp+1:off1*par.nlsp));
         nDCnlX(:,(off1-1)*par.nlsp+1:off1*par.nlsp) = bsxfun(@minus,temp,DC(:,off1));
     end
 end

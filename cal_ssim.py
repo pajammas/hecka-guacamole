@@ -91,8 +91,6 @@ def ssim_index(img1, img2, K = None, window = None, L = None):
     mu2_sq=mu2*mu2
     mu1_mu2=mu1*mu2
     
-    print img1 == img2    
-    
     sigma1_sq = scipy.ndimage.filters.convolve(img1*(img1), window, mode = 'constant')
     sigma1_sq = sigma1_sq[4:-5, 4:-5]
     sigma1_sq = sigma1_sq - mu1_sq
@@ -104,9 +102,6 @@ def ssim_index(img1, img2, K = None, window = None, L = None):
     sigma12 = scipy.ndimage.filters.convolve(img1*(img2), window, mode = 'constant')
     sigma12 = sigma12[4:-5, 4:-5]
     sigma12 = sigma12 - mu1_mu2
-
-    print ((2.*mu1_mu2 + C1)*(2.*sigma12 + C2))[1,1]
-    print ((mu1_sq + mu2_sq + C1)*(sigma1_sq + sigma2_sq + C2))[1,1]
     
     if (C1 > 0 and C2 > 0):
         ssim_map=((2. * mu1_mu2 + C1)*(2. * sigma12 + C2)) / ((mu1_sq + mu2_sq + C1)*(sigma1_sq + sigma2_sq + C2))
@@ -122,7 +117,6 @@ def ssim_index(img1, img2, K = None, window = None, L = None):
         index=(denominator1 != 0) and (denominator2 == 0)
         ssim_map[index]=numerator1[index] / denominator1[index]
     mssim=numpy.mean(ssim_map)
-    print ssim_map
     return mssim,ssim_map
 
 def fspecial(shape=(3,3),sigma=0.5):

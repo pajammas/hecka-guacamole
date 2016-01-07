@@ -56,16 +56,20 @@ def Parameters_Setting(nSig):
 
 
     # Load the saved model data into a local dictionary
-    load_dict = sio.loadmat(filename, squeeze_me=True)
+    load_dict = sio.loadmat(filename, squeeze_me=True, verify_compressed_data_integrity = True)
 
     # Extract the model itself (BIG)
     model = load_dict['model']
     # Some variables didn't get loaded properly
-    model['n_models'] = load_dict['cls_num']
+    #model['n_models'] = load_dict['cls_num']
 
 
+    #tmp = model['covs'].item()
+    #del model['covs']
+    #model['covs'] = tmp
 
 	# Extract necessary parameter data
+
     par['ps'] = load_dict['ps']        # patch size
     par['nlsp'] = load_dict['nlsp']    # number of non-local patches
     par['Win'] = load_dict['win']      # size of window around the patch
@@ -90,10 +94,6 @@ def Parameters_Setting(nSig):
     #par.S = single(GMM_S)
 
     return (par, model)
-
-
-print Parameters_Setting(15)[0]
-
 
 
 # load_dict = sio.loadmat('./model/PG_GMM_8x8_win15_nlsp10_delta0.002_cls33.mat', squeeze_me=True)
